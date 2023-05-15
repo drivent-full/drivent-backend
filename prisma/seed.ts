@@ -19,7 +19,7 @@ async function main() {
   console.log({ event });
 
   const nTickets = await prisma.ticketType.count();
-  if (nTickets < 3)
+  if (nTickets < 3) {
     await prisma.ticketType.createMany({
       data: [
         { name: 'Online', isRemote: true, includesHotel: false, price: 100 },
@@ -27,6 +27,23 @@ async function main() {
         { name: 'Com hotel', isRemote: false, includesHotel: true, price: 600 },
       ],
     });
+  }
+
+  const nHotels = await prisma.hotel.findFirst()
+  if (!nHotels) {
+    await prisma.hotel.create({
+      data: {
+        name: 'Driven Resort',
+        image: 'https://www.essemundoenosso.com.br/wp-content/uploads/2021/07/salinas-maceio.jpg',
+        Rooms: {
+          create: [
+            { name: 'Single', capacity: 10 },
+            { name: 'Double', capacity: 7 },
+          ]
+        }
+      }
+    })
+  }
 }
 
 main()
