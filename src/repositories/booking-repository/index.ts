@@ -35,6 +35,10 @@ async function findByUserId(userId: number) {
   });
 }
 
+async function findAll() {
+  return prisma.booking.findMany();
+}
+
 async function upsertBooking({ id, roomId, userId }: UpdateParams) {
   return prisma.booking.upsert({
     where: {
@@ -52,6 +56,7 @@ async function upsertBooking({ id, roomId, userId }: UpdateParams) {
 
 const bookingRepository = {
   create,
+  findAll,
   findByRoomId,
   findByUserId,
   upsertBooking,

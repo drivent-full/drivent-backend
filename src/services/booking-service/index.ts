@@ -32,6 +32,13 @@ async function getBooking(userId: number) {
   return booking;
 }
 
+async function getAllBooking() {
+  const booking = await bookingRepository.findAll();
+  if (!booking) throw notFoundError();
+
+  return booking;
+}
+
 async function bookingRoomById(userId: number, roomId: number) {
   if (!roomId) throw badRequestError();
 
@@ -59,6 +66,7 @@ async function changeBookingRoomById(userId: number, roomId: number) {
 const bookingService = {
   bookingRoomById,
   getBooking,
+  getAllBooking,
   changeBookingRoomById,
   checkEnrollmentTicket,
   checkValidBooking,
