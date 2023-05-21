@@ -37,8 +37,11 @@ async function main() {
         image: 'https://www.essemundoenosso.com.br/wp-content/uploads/2021/07/salinas-maceio.jpg',
         Rooms: {
           create: [
-            { name: 'Single', capacity: 10 },
-            { name: 'Double', capacity: 7 },
+            { name: '101', capacity: 2 },
+            { name: '102', capacity: 1 },
+            { name: '103', capacity: 3 },
+            { name: '201', capacity: 1 },
+            { name: '202', capacity: 3 },
           ]
         }
       }
