@@ -1,4 +1,4 @@
-import { Booking } from '@prisma/client';
+import { Booking, Hotel, Room } from '@prisma/client';
 import { prisma } from '@/config';
 
 type CreateParams = Omit<Booking, 'id' | 'createdAt' | 'updatedAt'>;
@@ -25,7 +25,7 @@ async function findByRoomId(roomId: number) {
 }
 
 async function findByUserId(userId: number) {
-  return prisma.booking.findFirst({
+  const booking: Booking & { Room: Room & { Hotel: Hotel; occupants?: number } } = await prisma.booking.findFirst({
     where: {
       userId,
     },
@@ -37,6 +37,10 @@ async function findByUserId(userId: number) {
       },
     },
   });
+  // includes the total number of occupants as a property of the Room object
+  const totalRoomOccupants = booking ? await prisma.booking.count({ where: { roomId: booking.roomId } }) : 0;
+  booking.Room.occupants = totalRoomOccupants;
+  return booking;
 }
 
 async function findAll() {
