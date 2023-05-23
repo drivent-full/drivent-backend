@@ -29,7 +29,7 @@ async function main() {
     });
   }
 
-  const nHotels = await prisma.hotel.findFirst()
+  const nHotels = await prisma.hotel.findFirst();
   if (!nHotels) {
     await prisma.hotel.create({
       data: {
@@ -42,10 +42,92 @@ async function main() {
             { name: '103', capacity: 3 },
             { name: '201', capacity: 1 },
             { name: '202', capacity: 3 },
-          ]
-        }
-      }
-    })
+          ],
+        },
+      },
+    });
+  }
+  const nAuditoriums = await prisma.auditorium.count();
+
+  if (!nAuditoriums) {
+    const nineOClock = dayjs().startOf('day').add(1, 'day');
+    await prisma.auditorium.create({
+      data: {
+        name: 'Auditório Principal',
+        Activity: {
+          createMany: {
+            data: [
+              {
+                title: 'Minecraft: montando o PC ideal',
+                startsAt: nineOClock.set('hours', 9).toDate(),
+                endsAt: nineOClock.set('hours', 10).toDate(),
+                vacancies: 30,
+              },
+              {
+                title: 'LoL: montando o PC ideal',
+                startsAt: nineOClock.set('hours', 10).toDate(),
+                endsAt: nineOClock.set('hours', 11).toDate(),
+                vacancies: 6,
+              },
+              {
+                title: 'LoL: montando o PC ideal - segundo dia',
+                startsAt: nineOClock.add(1, 'day').set('hours', 10).toDate(),
+                endsAt: nineOClock.add(1, 'day').set('hours', 11).toDate(),
+                vacancies: 4,
+              },
+            ],
+          },
+        },
+      },
+    });
+
+    await prisma.auditorium.create({
+      data: {
+        name: 'Auditório Lateral',
+        Activity: {
+          createMany: {
+            data: [
+              {
+                title: 'Palestra x',
+                startsAt: nineOClock.set('hours', 9).toDate(),
+                endsAt: nineOClock.set('hours', 11).toDate(),
+                vacancies: 30,
+              },
+              {
+                title: 'Palestra x terceiro dia',
+                startsAt: nineOClock.add(1, 'day').set('hours', 9).toDate(),
+                endsAt: nineOClock.add(1, 'day').set('hours', 11).toDate(),
+                vacancies: 2,
+              },
+            ],
+          },
+        },
+      },
+    });
+
+    await prisma.auditorium.create({
+      data: {
+        name: 'Sala de Workshop',
+        Activity: {
+          createMany: {
+            data: [
+              {
+                title: 'Palestra y',
+                startsAt: nineOClock.set('hours', 9).toDate(),
+                endsAt: nineOClock.set('hours', 10).toDate(),
+                vacancies: 20,
+              },
+              {
+                title: 'Palestra z',
+                startsAt: nineOClock.set('hours', 10).toDate(),
+                endsAt: nineOClock.set('hours', 11).toDate(),
+                vacancies: 8,
+              },
+            ],
+          },
+        },
+      },
+    });
   }
 }
 
