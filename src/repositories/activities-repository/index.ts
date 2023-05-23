@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '@/config';
 
 async function getActivities() {
@@ -19,8 +20,18 @@ async function getActivities() {
   return activitiesWithAvailability;
 }
 
+async function getActivityDates(): Promise<[{ date: string }]> {
+  const data = (await prisma.$queryRaw(Prisma.sql`
+      SELECT DISTINCT DATE("Activity"."startsAt" AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo' ) as date
+      FROM "Activity"
+  `)) as [{ date: string }];
+
+  return data;
+}
+
 const activitiesRepository = {
   getActivities,
+  getActivityDates,
 };
 
 export default activitiesRepository;
