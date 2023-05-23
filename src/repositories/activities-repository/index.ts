@@ -1,4 +1,5 @@
-import { Prisma } from '@prisma/client';
+import { Activity, Prisma } from '@prisma/client';
+import dayjs from 'dayjs';
 import { prisma } from '@/config';
 
 async function getActivities() {
@@ -29,9 +30,35 @@ async function getActivityDates(): Promise<[{ date: string }]> {
   return data;
 }
 
+async function getActivitiesByDates(date: Date): Promise<Activity[]> {
+  const date2 = dayjs(date).add(1, 'days').toDate();
+  const activities = await prisma.activity.findMany({
+    include: {
+      Auditorium: true,
+    },
+
+    where: {
+      startsAt: {
+        gte: date,
+        lt: date2,
+      },
+    },
+  });
+
+  const activitiesWithAvailability = await Promise.all(
+    activities.map(async (activity) => ({
+      ...activity,
+      vacancies: activity.vacancies - (await prisma.subscription.count({ where: { activityId: activity.id } })),
+    })),
+  );
+
+  return activitiesWithAvailability;
+}
+
 const activitiesRepository = {
   getActivities,
   getActivityDates,
+  getActivitiesByDates,
 };
 
 export default activitiesRepository;
