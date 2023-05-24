@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
+import { AuthenticatedRequest } from '@/middlewares';
 
 import activitiesService from '@/services/activities-service';
 
@@ -21,6 +22,17 @@ export async function getActivitiesDatesController(_req: Request, res: Response,
   try {
     const dates = await activitiesService.getActivitiesDatesService();
     return res.status(httpStatus.OK).send(dates);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function subscribeController(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  try {
+    const { userId } = req;
+    const { activityId } = req.body;
+    await activitiesService.subscribe(userId, parseInt(activityId));
+    return res.sendStatus(httpStatus.CREATED);
   } catch (error) {
     next(error);
   }

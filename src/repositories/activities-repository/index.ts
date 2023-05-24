@@ -55,10 +55,38 @@ async function getActivitiesByDates(date: Date): Promise<Activity[]> {
   return activitiesWithAvailability;
 }
 
+async function getSubscriptions(userId: number) {
+  const subs = await prisma.subscription.findMany({
+    where: {
+      userId,
+    },
+  });
+
+  return subs;
+}
+
+async function getActivityById(activityId: number) {
+  const activity = await prisma.activity.findUnique({ where: { id: activityId } });
+  if (activity) activity.vacancies -= await prisma.subscription.count({ where: { activityId } });
+  return activity;
+}
+
+async function subscribe(userId: number, activityId: number) {
+  await prisma.subscription.create({
+    data: {
+      userId,
+      activityId,
+    },
+  });
+}
+
 const activitiesRepository = {
   getActivities,
   getActivityDates,
   getActivitiesByDates,
+  getSubscriptions,
+  getActivityById,
+  subscribe,
 };
 
 export default activitiesRepository;

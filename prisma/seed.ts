@@ -113,14 +113,20 @@ async function main() {
             data: [
               {
                 title: 'Palestra y',
-                startsAt: nineOClock.set('hours', 9).toDate(),
-                endsAt: nineOClock.set('hours', 10).toDate(),
+                startsAt: nineOClock.set('hours', 11).toDate(),
+                endsAt: nineOClock.set('hours', 12).toDate(),
                 vacancies: 20,
               },
               {
                 title: 'Palestra z',
                 startsAt: nineOClock.set('hours', 10).toDate(),
                 endsAt: nineOClock.set('hours', 11).toDate(),
+                vacancies: 8,
+              },
+              {
+                title: 'Palestra zz',
+                startsAt: nineOClock.set('hours', 20).toDate(),
+                endsAt: nineOClock.set('hours', 22).toDate(),
                 vacancies: 8,
               },
             ],
