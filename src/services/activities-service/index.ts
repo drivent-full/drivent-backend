@@ -31,6 +31,18 @@ async function subscribe(userId: number, activityId: number) {
   if (subscriptions.find((s) => s.activityId === activityId)) {
     throw conflictError('Already subscribed');
   }
+  if (
+    subscriptions.find(
+      (s) =>
+        !(
+          s.Activity.endsAt.getTime() <= activityExists.startsAt.getTime() ||
+          s.Activity.startsAt.getTime() >= activityExists.endsAt.getTime()
+        ),
+    )
+  ) {
+    console.log('sss');
+    throw conflictError('This activity conflicts with another');
+  }
   await activitiesRepository.subscribe(userId, activityId);
 }
 

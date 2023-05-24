@@ -61,6 +61,9 @@ async function getSubscriptions(userId: number) {
     where: {
       userId,
     },
+    include: {
+      Activity: true,
+    },
   });
 
   return subs;
