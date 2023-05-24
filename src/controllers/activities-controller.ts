@@ -4,14 +4,15 @@ import { AuthenticatedRequest } from '@/middlewares';
 
 import activitiesService from '@/services/activities-service';
 
-export async function getActivitiesController(req: Request, res: Response, next: NextFunction) {
+export async function getActivitiesController(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const datestr = req.query.date as string;
   const date = new Date(datestr);
   const dateValid = date instanceof Date && !isNaN(date.valueOf());
+  const { userId } = req;
   try {
     let activities = [];
     if (!dateValid) activities = await activitiesService.getActivitiesService();
-    else activities = await activitiesService.getActivitiesByDatesService(date);
+    else activities = await activitiesService.getActivitiesByDatesService(date, userId);
     return res.status(httpStatus.OK).send(activities);
   } catch (error) {
     next(error);

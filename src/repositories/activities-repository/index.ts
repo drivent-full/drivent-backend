@@ -30,7 +30,7 @@ async function getActivityDates(): Promise<[{ date: string }]> {
   return data;
 }
 
-async function getActivitiesByDates(date: Date): Promise<Activity[]> {
+async function getActivitiesByDates(date: Date, userId: number): Promise<Activity[]> {
   const date2 = dayjs(date).add(1, 'days').toDate();
   const activities = await prisma.activity.findMany({
     include: {
@@ -49,6 +49,7 @@ async function getActivitiesByDates(date: Date): Promise<Activity[]> {
     activities.map(async (activity) => ({
       ...activity,
       vacancies: activity.vacancies - (await prisma.subscription.count({ where: { activityId: activity.id } })),
+      subscribed: (await prisma.subscription.count({ where: { activityId: activity.id, userId } })) >= 1,
     })),
   );
 

@@ -11,8 +11,8 @@ async function getActivitiesDatesService() {
   return activitiesRepository.getActivityDates();
 }
 
-async function getActivitiesByDatesService(date: Date) {
-  return activitiesRepository.getActivitiesByDates(date);
+async function getActivitiesByDatesService(date: Date, userId = -1) {
+  return activitiesRepository.getActivitiesByDates(date, userId);
 }
 
 async function subscribe(userId: number, activityId: number) {
