@@ -154,6 +154,8 @@ model Activity {
   auditoriumId Int
   Auditorium   Auditorium     @relation(fields: [auditoriumId], references: [id], onDelete: Cascade)
   Subscription Subscription[]
+
+  @@index([startsAt])
 }
 
 model Auditorium {
